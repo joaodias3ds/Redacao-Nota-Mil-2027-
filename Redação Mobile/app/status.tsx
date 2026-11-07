@@ -1,15 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import type { EssaySummary } from '@nota-mil/shared/student';
 import { Body, Card, GhostButton, Muted, Overline, PrimaryButton, Title } from '../src/components/Ui';
-import { mockToday } from '../src/data/student';
+import { studentApi } from '../src/lib/student-api';
 import { colors } from '../src/theme';
 
 export default function StatusScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const essay = mockToday.lastEssay!;
+  const { essayId } = useLocalSearchParams<{ essayId?: string }>();
+  const [essay, setEssay] = useState<EssaySummary | null>(null);
+
+  useEffect(() => {
+    studentApi.getEssayStatus(essayId).then(setEssay).catch(() => setEssay(null));
+  }, [essayId]);
+
+  if (!essay) {
+    return (
+      <View style={[styles.root, { paddingTop: insets.top + 16 }]}>
+        <Muted>Carregando status…</Muted>
+      </View>
+    );
+  }
 
   return (
     <ScrollView contentContainerStyle={[styles.root, { paddingTop: insets.top + 16 }]}>
@@ -19,7 +33,7 @@ export default function StatusScreen() {
         <Overline>Redação enviada</Overline>
         <Body style={styles.theme}>{essay.theme}</Body>
         <Muted>
-          {essay.sentAtLabel} · Versão {essay.version}
+          {essay.sentAtLabel} · Versão {essay.version} · {essay.statusLabel}
         </Muted>
       </Card>
 
@@ -27,11 +41,7 @@ export default function StatusScreen() {
         {essay.pipeline.map((step) => (
           <View key={step.key} style={styles.step}>
             <View
-              style={[
-                styles.dot,
-                step.done && styles.dotDone,
-                step.current && styles.dotCurrent,
-              ]}
+              style={[styles.dot, step.done && styles.dotDone, step.current && styles.dotCurrent]}
             />
             <View style={styles.stepText}>
               <Body style={styles.stepLabel}>{step.label}</Body>
@@ -41,10 +51,13 @@ export default function StatusScreen() {
         ))}
       </Card>
 
-      <Muted>
-        A pré-correção é uma estimativa feita por IA. A nota oficial é a do seu professor.
-      </Muted>
-      <PrimaryButton label="Ver pré-correção" onPress={() => router.push('/pre-correcao')} />
+      <Muted>A pré-correção é uma estimativa feita por IA. A nota oficial é a do seu professor.</Muted>
+      <PrimaryButton
+        label="Ver pré-correção"
+        onPress={() =>
+          router.push({ pathname: '/pre-correcao', params: { essayId: essay.id } })
+        }
+      />
     </ScrollView>
   );
 }

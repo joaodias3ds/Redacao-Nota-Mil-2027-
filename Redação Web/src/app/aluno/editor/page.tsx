@@ -2,14 +2,18 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import type { EssayDraft, WritingAssistResult } from '@nota-mil/shared/student';
 import { PhoneShell } from '@/components/aluno/PhoneShell';
 import { countEssayLines, studentApi } from '@/lib/student-api';
 
 export default function EditorPage() {
+  const router = useRouter();
   const [draft, setDraft] = useState<EssayDraft | null>(null);
   const [text, setText] = useState('');
   const [savedLabel, setSavedLabel] = useState('Carregando…');
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
   const [assist, setAssist] = useState<WritingAssistResult | null>(null);
   const [assistLoading, setAssistLoading] = useState(false);
   const [assistError, setAssistError] = useState<string | null>(null);
@@ -47,13 +51,10 @@ export default function EditorPage() {
           minRecommended: draft.minRecommended,
           savedRepertoireIds: draft.savedRepertoireIds,
         })
-        .then((saved) => {
-          setSavedLabel(saved.savedLabel);
-        })
+        .then((saved) => setSavedLabel(saved.savedLabel))
         .catch(() => setSavedLabel('Erro ao salvar'));
     }, 700);
     return () => clearTimeout(handle);
-    // autosave só pelo texto; metadados vêm do draft carregado
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text, lines, draft?.id]);
 
@@ -62,14 +63,31 @@ export default function EditorPage() {
     setAssistLoading(true);
     setAssistError(null);
     try {
-      const result = await studentApi.writingAssist({ theme: draft.theme, text });
-      setAssist(result);
+      setAssist(await studentApi.writingAssist({ theme: draft.theme, text }));
     } catch (e) {
       setAssistError(e instanceof Error ? e.message : 'Falha na IA auxiliar');
     } finally {
       setAssistLoading(false);
     }
   }, [draft, text]);
+
+  const send = useCallback(async () => {
+    if (!draft || sending) return;
+    setSending(true);
+    setSendError(null);
+    try {
+      const result = await studentApi.sendEssay({
+        draftId: draft.id,
+        theme: draft.theme,
+        text,
+        linesUsed: Math.min(lines, draft.linesMax),
+      });
+      router.push(`/aluno/status?essayId=${encodeURIComponent(result.essay.id)}`);
+    } catch (e) {
+      setSendError(e instanceof Error ? e.message : 'Falha ao enviar');
+      setSending(false);
+    }
+  }, [draft, sending, text, lines, router]);
 
   if (!draft) {
     return (
@@ -86,10 +104,11 @@ export default function EditorPage() {
           Voltar
         </Link>
         <p className="aluno-muted">{savedLabel}</p>
-        <Link className="aluno-btn" href="/aluno/status">
-          Enviar
-        </Link>
+        <button type="button" className="aluno-btn" onClick={send} disabled={sending}>
+          {sending ? 'Enviando…' : 'Enviar'}
+        </button>
       </div>
+      {sendError ? <p className="aluno-muted">{sendError}</p> : null}
       <h1 className="aluno-title">Nova redação</h1>
       <p className="aluno-overline">Tema</p>
       <p className="aluno-body" style={{ fontWeight: 600 }}>
@@ -117,7 +136,7 @@ export default function EditorPage() {
           </button>
         </div>
         <p className="aluno-muted" style={{ marginBottom: 8 }}>
-          Orienta a estrutura do curso. Não atribui nota ENEM nesta etapa.
+          Orienta a estrutura do curso. A nota estimada só aparece depois do envio.
         </p>
         {assistError ? <p className="aluno-muted">{assistError}</p> : null}
         {assist ? (

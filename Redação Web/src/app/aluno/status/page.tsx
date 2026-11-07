@@ -1,9 +1,41 @@
-import Link from 'next/link';
-import { PhoneShell } from '@/components/aluno/PhoneShell';
-import { mockToday } from '@/lib/student-mock';
+'use client';
 
-export default function StatusPage() {
-  const essay = mockToday.lastEssay;
+import { Suspense, useEffect, useState } from 'react';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import type { EssaySummary } from '@nota-mil/shared/student';
+import { PhoneShell } from '@/components/aluno/PhoneShell';
+import { studentApi } from '@/lib/student-api';
+
+function StatusInner() {
+  const params = useSearchParams();
+  const essayId = params.get('essayId') || undefined;
+  const [essay, setEssay] = useState<EssaySummary | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    studentApi
+      .getEssayStatus(essayId)
+      .then(setEssay)
+      .catch((e) => setError(e instanceof Error ? e.message : 'Falha ao carregar'));
+  }, [essayId]);
+
+  if (error) {
+    return (
+      <PhoneShell showNav={false}>
+        <p className="aluno-muted">{error}</p>
+      </PhoneShell>
+    );
+  }
+
+  if (!essay) {
+    return (
+      <PhoneShell showNav={false}>
+        <p className="aluno-muted">Carregando status…</p>
+      </PhoneShell>
+    );
+  }
+
   return (
     <PhoneShell showNav={false}>
       <Link className="aluno-btn ghost" href="/aluno/hoje" style={{ alignSelf: 'flex-start' }}>
@@ -16,7 +48,7 @@ export default function StatusPage() {
           {essay.theme}
         </p>
         <p className="aluno-muted">
-          {essay.sentAtLabel} · Versão {essay.version}
+          {essay.sentAtLabel} · Versão {essay.version} · {essay.statusLabel}
         </p>
       </section>
       <section className="aluno-card" style={{ gap: 16 }}>
@@ -44,9 +76,23 @@ export default function StatusPage() {
       <p className="aluno-muted">
         A pré-correção é uma estimativa feita por IA. A nota oficial é a do seu professor.
       </p>
-      <Link className="aluno-btn" href="/aluno/pre-correcao">
+      <Link className="aluno-btn" href={`/aluno/pre-correcao?essayId=${encodeURIComponent(essay.id)}`}>
         Ver pré-correção
       </Link>
     </PhoneShell>
+  );
+}
+
+export default function StatusPage() {
+  return (
+    <Suspense
+      fallback={
+        <PhoneShell showNav={false}>
+          <p className="aluno-muted">Carregando…</p>
+        </PhoneShell>
+      }
+    >
+      <StatusInner />
+    </Suspense>
   );
 }

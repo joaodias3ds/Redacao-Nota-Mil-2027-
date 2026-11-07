@@ -145,3 +145,15 @@ export interface SaveDraftInput {
   minRecommended?: number;
   savedRepertoireIds?: string[];
 }
+
+export interface SendEssayInput {
+  draftId?: string;
+  theme: string;
+  text: string;
+  linesUsed: number;
+}
+
+export interface SendEssayResult {
+  essay: EssaySummary;
+  preCorrection: PreCorrection;
+}

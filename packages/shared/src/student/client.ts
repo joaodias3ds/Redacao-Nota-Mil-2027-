@@ -6,10 +6,13 @@ import {
 } from './mocks.js';
 import type {
   EssayDraft,
+  EssaySummary,
   EvolutionSnapshot,
   PreCorrection,
   RepertoireCard,
   SaveDraftInput,
+  SendEssayInput,
+  SendEssayResult,
   TodayHome,
   WritingAssistResult,
 } from './types.js';
@@ -19,6 +22,8 @@ export interface StudentApi {
   getFeed(): Promise<RepertoireCard[]>;
   getDraft(draftId?: string): Promise<EssayDraft | null>;
   saveDraft(input: SaveDraftInput): Promise<EssayDraft>;
+  sendEssay(input: SendEssayInput): Promise<SendEssayResult>;
+  getEssayStatus(essayId?: string): Promise<EssaySummary>;
   writingAssist(input: { theme: string; text: string }): Promise<WritingAssistResult>;
   getPreCorrection(essayId: string): Promise<PreCorrection>;
   getEvolution(): Promise<EvolutionSnapshot>;
@@ -95,6 +100,7 @@ function heuristicAssist(theme: string, text: string): WritingAssistResult {
 }
 
 const memoryDrafts = new Map<string, EssayDraft>();
+let lastSend: SendEssayResult | null = null;
 
 function cloneDraft(d: EssayDraft): EssayDraft {
   return { ...d, savedRepertoireIds: [...d.savedRepertoireIds] };
@@ -104,7 +110,11 @@ export const mockStudentApi: StudentApi = {
   async getToday() {
     await delay();
     const draft = memoryDrafts.get(mockToday.draft!.id) ?? mockToday.draft;
-    return { ...mockToday, draft: draft ? cloneDraft(draft) : null };
+    return {
+      ...mockToday,
+      draft: draft ? cloneDraft(draft) : null,
+      lastEssay: lastSend?.essay ?? mockToday.lastEssay,
+    };
   },
   async getFeed() {
     await delay();
@@ -134,12 +144,47 @@ export const mockStudentApi: StudentApi = {
     memoryDrafts.set(id, next);
     return cloneDraft(next);
   },
+  async sendEssay(input) {
+    await delay(400);
+    const essayId = 'essay-1';
+    const pre = { ...mockPreCorrection, essayId };
+    lastSend = {
+      essay: {
+        id: essayId,
+        theme: input.theme,
+        status: 'ai_ready',
+        statusLabel: 'Pré-correção pronta',
+        version: 1,
+        sentAtLabel: 'Agora',
+        pipeline: [
+          { key: 'sent', label: 'Enviada', detail: 'Recebemos seu texto', done: true },
+          { key: 'ai', label: 'Pré-correção da IA', detail: 'Estimativa disponível', done: true },
+          {
+            key: 'teacher',
+            label: 'Revisão do professor',
+            detail: 'Em andamento',
+            done: false,
+            current: true,
+          },
+          { key: 'official', label: 'Correção oficial', detail: 'Aguardando', done: false },
+        ],
+      },
+      preCorrection: pre,
+    };
+    return lastSend;
+  },
+  async getEssayStatus(essayId) {
+    await delay();
+    if (lastSend && (!essayId || lastSend.essay.id === essayId)) return lastSend.essay;
+    return mockToday.lastEssay!;
+  },
   async writingAssist({ theme, text }) {
     await delay(180);
     return heuristicAssist(theme, text);
   },
   async getPreCorrection(essayId: string) {
     await delay();
+    if (lastSend?.preCorrection) return { ...lastSend.preCorrection, essayId };
     return { ...mockPreCorrection, essayId };
   },
   async getEvolution() {
@@ -180,6 +225,19 @@ export function createHttpStudentApi(baseUrl: string): StudentApi {
         }),
       );
     },
+    async sendEssay(input) {
+      return parseJson(
+        await fetch(`${root}/api/aluno/send`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(input),
+        }),
+      );
+    },
+    async getEssayStatus(essayId) {
+      const q = essayId ? `?essayId=${encodeURIComponent(essayId)}` : '';
+      return parseJson(await fetch(`${root}/api/aluno/status${q}`));
+    },
     async writingAssist(input) {
       return parseJson(
         await fetch(`${root}/api/aluno/assist`, {
@@ -190,7 +248,9 @@ export function createHttpStudentApi(baseUrl: string): StudentApi {
       );
     },
     async getPreCorrection(essayId) {
-      return parseJson(await fetch(`${root}/api/aluno/pre-correcao?essayId=${encodeURIComponent(essayId)}`));
+      return parseJson(
+        await fetch(`${root}/api/aluno/pre-correcao?essayId=${encodeURIComponent(essayId)}`),
+      );
     },
     async getEvolution() {
       return parseJson(await fetch(`${root}/api/aluno/evolucao`));
@@ -198,17 +258,12 @@ export function createHttpStudentApi(baseUrl: string): StudentApi {
   };
 }
 
-/**
- * Preferência: API HTTP se `baseUrl` existir; senão mock local.
- * Web e Mobile devem usar a mesma base (Next em :3001).
- */
 export function createStudentApi(baseUrl?: string | null): StudentApi {
   const url = (baseUrl || '').trim();
   if (!url) return mockStudentApi;
   return createHttpStudentApi(url);
 }
 
-/** @deprecated use createStudentApi — mantido para imports existentes */
 export const studentApi: StudentApi = mockStudentApi;
 
 export const deepLinkPaths = {

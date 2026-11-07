@@ -50,7 +50,7 @@ Componentes de referência: `EssayFeedback`, `GradeChart`, `BottomNav` em `desig
 
 ## Fase atual
 
-**Parte 1:** editor Web + Mobile na mesma API (`/api/aluno/*`), autosave (Neon) e **IA auxiliar de estrutura** (Gemini). Ver `docs/PART1.md`.
+**Parte 1–2:** editor sincronizado + IA auxiliar; **envio** com pré-correção C1–C5 (nota estimada para treino). Ver `docs/PART1.md` e `docs/PART2.md`.
 
 ## Segurança e chaves
 

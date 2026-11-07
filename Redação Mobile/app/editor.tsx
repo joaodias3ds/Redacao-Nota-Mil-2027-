@@ -21,6 +21,8 @@ export default function EditorScreen() {
   const [draft, setDraft] = useState<EssayDraft | null>(null);
   const [text, setText] = useState('');
   const [savedLabel, setSavedLabel] = useState('Carregando…');
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
   const [assist, setAssist] = useState<WritingAssistResult | null>(null);
   const [assistLoading, setAssistLoading] = useState(false);
 
@@ -75,6 +77,24 @@ export default function EditorScreen() {
     }
   }, [draft, text]);
 
+  const send = useCallback(async () => {
+    if (!draft || sending) return;
+    setSending(true);
+    setSendError(null);
+    try {
+      const result = await studentApi.sendEssay({
+        draftId: draft.id,
+        theme: draft.theme,
+        text,
+        linesUsed: Math.min(lines, draft.linesMax),
+      });
+      router.push({ pathname: '/status', params: { essayId: result.essay.id } });
+    } catch (e) {
+      setSendError(e instanceof Error ? e.message : 'Falha ao enviar');
+      setSending(false);
+    }
+  }, [draft, sending, text, lines, router]);
+
   if (!draft) {
     return (
       <View style={[styles.root, { paddingTop: insets.top + 8, padding: 16 }]}>
@@ -88,10 +108,11 @@ export default function EditorScreen() {
       <View style={styles.top}>
         <GhostButton label="Voltar" onPress={() => router.back()} />
         <Muted>{savedLabel}</Muted>
-        <PrimaryButton label="Enviar" onPress={() => router.push('/status')} />
+        <PrimaryButton label={sending ? 'Enviando…' : 'Enviar'} onPress={send} />
       </View>
 
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+        {sendError ? <Muted>{sendError}</Muted> : null}
         <Title>Nova redação</Title>
         <Overline>Tema</Overline>
         <Body style={styles.theme}>{draft.theme}</Body>
@@ -121,7 +142,7 @@ export default function EditorScreen() {
               )}
             </Pressable>
           </View>
-          <Muted>Orienta a estrutura do curso. Sem nota ENEM nesta etapa.</Muted>
+          <Muted>Orienta a estrutura. A nota estimada só aparece após o envio.</Muted>
           {assist ? (
             <View style={styles.assistBody}>
               <Body style={styles.theme}>{assist.structure.summary}</Body>

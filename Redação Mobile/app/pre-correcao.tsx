@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, View, StyleSheet, Text } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import type { PreCorrection } from '@nota-mil/shared/student';
 import {
   Body,
   Card,
@@ -12,13 +13,27 @@ import {
   SecondaryButton,
   Title,
 } from '../src/components/Ui';
-import { mockPreCorrection } from '../src/data/student';
+import { studentApi } from '../src/lib/student-api';
 import { colors } from '../src/theme';
 
 export default function PreCorrecaoScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const data = mockPreCorrection;
+  const { essayId } = useLocalSearchParams<{ essayId?: string }>();
+  const id = essayId || '22222222-2222-4222-8222-222222222222';
+  const [data, setData] = useState<PreCorrection | null>(null);
+
+  useEffect(() => {
+    studentApi.getPreCorrection(id).then(setData).catch(() => setData(null));
+  }, [id]);
+
+  if (!data) {
+    return (
+      <View style={[styles.root, { paddingTop: insets.top + 16 }]}>
+        <Muted>Gerando pré-correção…</Muted>
+      </View>
+    );
+  }
 
   return (
     <ScrollView contentContainerStyle={[styles.root, { paddingTop: insets.top + 16 }]}>
@@ -26,7 +41,7 @@ export default function PreCorrecaoScreen() {
       <Title>Pré-correção</Title>
 
       <Card style={styles.hero}>
-        <Overline>Nota estimada · IA</Overline>
+        <Overline>Nota estimada para treino · IA</Overline>
         <Muted>{data.disclaimer}</Muted>
         <Title style={styles.total}>
           {data.estimatedTotal}
@@ -45,6 +60,7 @@ export default function PreCorrecaoScreen() {
           <View style={styles.track}>
             <View style={[styles.fill, { width: `${(c.score / c.max) * 100}%` }]} />
           </View>
+          {c.comment ? <Muted>{c.comment}</Muted> : null}
         </Card>
       ))}
 
