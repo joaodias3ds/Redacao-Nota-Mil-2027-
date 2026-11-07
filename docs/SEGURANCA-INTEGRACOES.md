@@ -23,10 +23,10 @@ Mobile / Web  --(anon key + JWT usuário)-->  Supabase Auth
 
 | Serviço | Situação |
 |---|---|
-| Supabase | 1 projeto INACTIVE (`gewfhwgepuobkvrlfqcw`, sa-east-1) — reativar ou criar novo |
-| Neon | vários projetos; preferir um dedicado `redacao-nota-mil-2027` em sa-east-1 |
-| Google | preencher em `dados e chaves/` após criar OAuth no GCP |
-| Gemini | chave em `dados e chaves/privados` |
+| Supabase | Auth ativo `redacao-nota-mil-2027` (`fjmtabrwtgpganwkulpk`, sa-east-1) |
+| Neon | DB ativo `calm-grass-30104205` (`redacao-nota-mil-2027`, sa-east-1) + schema core |
+| Google | Gmail OAuth (curso+admin) + Drive SA em `privados/` |
+| Gemini | `gemini-3.1-flash-lite` em `privados/gemini.env` |
 
 ## Checklist LGPD / menores
 
