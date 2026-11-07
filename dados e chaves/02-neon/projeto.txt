@@ -1,4 +1,0 @@
-NEON_PROJECT_ID=calm-grass-30104205
-NEON_REGION=aws-sa-east-1
-NEON_HOST_HINT=ep-patient-rice-b6iwl7ja-pooler.c-2.sa-east-1.aws.neon.tech
-# Senha/URL completa: ver dados e chaves/privados/neon.env

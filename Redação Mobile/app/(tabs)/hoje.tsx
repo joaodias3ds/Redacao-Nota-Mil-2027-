@@ -1,15 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, View, StyleSheet, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import type { TodayHome } from '@nota-mil/shared/student';
 import { Body, Card, Muted, Overline, PrimaryButton, Title } from '../../src/components/Ui';
-import { mockToday } from '../../src/data/student';
+import { studentApi } from '../../src/lib/student-api';
 import { colors } from '../../src/theme';
 
 export default function HojeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const data = mockToday;
+  const [data, setData] = useState<TodayHome | null>(null);
+
+  useEffect(() => {
+    studentApi.getToday().then(setData).catch(() => setData(null));
+  }, []);
+
+  if (!data) {
+    return (
+      <View style={[styles.root, { paddingTop: insets.top + 16 }]}>
+        <Muted>Carregando… (API web em :3001?)</Muted>
+      </View>
+    );
+  }
 
   return (
     <ScrollView
@@ -33,57 +46,43 @@ export default function HojeScreen() {
         </Card>
       ) : null}
 
-      <Pressable onPress={() => router.push('/status')}>
-        <Card style={styles.block}>
-          <View style={styles.row}>
-            <Body style={styles.cardTitle}>Sua última redação</Body>
-            <View style={styles.badge}>
-              <Muted style={styles.badgeText}>{data.lastEssay?.statusLabel}</Muted>
-            </View>
-          </View>
-          <View style={styles.pipeline}>
-            {['Enviada', 'IA', 'Professor', 'Pronta'].map((label, i) => (
-              <View key={label} style={styles.pipeItem}>
-                <View style={[styles.pipeDot, i < 2 && styles.pipeDotDone, i === 2 && styles.pipeDotCurrent]} />
-                <Muted style={i === 2 ? styles.pipeCurrent : undefined}>{label}</Muted>
+      {data.lastEssay ? (
+        <Pressable onPress={() => router.push('/status')}>
+          <Card style={styles.block}>
+            <View style={styles.row}>
+              <Body style={styles.cardTitle}>Sua última redação</Body>
+              <View style={styles.badge}>
+                <Muted style={styles.badgeText}>{data.lastEssay.statusLabel}</Muted>
               </View>
-            ))}
-          </View>
-        </Card>
-      </Pressable>
+            </View>
+          </Card>
+        </Pressable>
+      ) : null}
 
       <Card style={styles.block}>
         <Overline>Meta do feed</Overline>
-        <Title style={styles.meta}>
-          {data.feedGoal.done} / {data.feedGoal.target}
-        </Title>
-        <Muted>Faltam {data.feedGoal.target - data.feedGoal.done} cards</Muted>
-        <PrimaryButton label="Abrir feed" onPress={() => router.push('/(tabs)/feed')} />
-      </Card>
-
-      <Card style={styles.block}>
-        <Overline>Esta semana</Overline>
-        <Body>{data.weekStreakDays} dias de prática</Body>
-        <Overline>Tema da semana</Overline>
-        <Body>{data.weekTheme}</Body>
+        <Body style={styles.cardTitle}>
+          {data.feedGoal.done}/{data.feedGoal.target} repertórios
+        </Body>
+        <Muted>
+          Sequência: {data.weekStreakDays} dias · {data.weekTheme}
+        </Muted>
       </Card>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  root: { paddingHorizontal: 16, paddingBottom: 24, gap: 16 },
-  block: { gap: 12 },
+  root: { padding: 16, gap: 16, paddingBottom: 40, backgroundColor: colors.page, flexGrow: 1 },
+  block: { gap: 10 },
   row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  theme: { color: colors.gray },
+  theme: { color: colors.muted },
   cardTitle: { fontWeight: '700' },
-  badge: { backgroundColor: colors.soft, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999 },
+  badge: {
+    backgroundColor: colors.soft,
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
   badgeText: { color: colors.action, fontWeight: '600' },
-  pipeline: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 },
-  pipeItem: { alignItems: 'center', gap: 6, flex: 1 },
-  pipeDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: colors.border },
-  pipeDotDone: { backgroundColor: colors.success },
-  pipeDotCurrent: { backgroundColor: colors.brand },
-  pipeCurrent: { color: colors.action, fontWeight: '700' },
-  meta: { fontSize: 28 },
 });

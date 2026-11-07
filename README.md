@@ -50,12 +50,13 @@ Componentes de referência: `EssayFeedback`, `GradeChart`, `BottomNav` em `desig
 
 ## Fase atual
 
-Protótipo navegável com dados fictícios (Marina, tema, 760/1000). Sem login real nem IA ainda.
+**Parte 1:** editor Web + Mobile na mesma API (`/api/aluno/*`), autosave (Neon) e **IA auxiliar de estrutura** (Gemini). Ver `docs/PART1.md`.
 
 ## Segurança e chaves
 
-Tudo sensível fica em **`dados e chaves/`** (veja `LEIA-ME.md`).  
-Antes de qualquer push: `.\scripts\auditoria-segredos.ps1` (rode **duas** vezes).
+A pasta **`dados e chaves/`** é **local** e está no `.gitignore` (não sobe no GitHub).  
+Exemplos públicos de env: `docs/env/`. Contrato da IA auxiliar: `docs/ia/`.  
+Antes de qualquer push: `.\scripts\auditoria-segredos.ps1`.
 
 Integrações: Supabase (Auth), Neon (`redacao-nota-mil-2027`), Google (Drive/Sheets/2 Gmails), Gemini — detalhes em `docs/SEGURANCA-INTEGRACOES.md`.
 

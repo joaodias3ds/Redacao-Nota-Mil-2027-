@@ -104,3 +104,44 @@ export interface StudentSession {
   studentName: string;
   isMinor: boolean;
 }
+
+export type WritingAssistArea =
+  | 'contexto'
+  | 'tese'
+  | 'desenvolvimento'
+  | 'coesao'
+  | 'intervencao'
+  | 'escrita';
+
+export interface WritingAssistTip {
+  area: WritingAssistArea;
+  title: string;
+  body: string;
+  priority: number;
+}
+
+export interface WritingAssistStructure {
+  hasContext: boolean;
+  hasThesis: boolean;
+  hasDevelopment: boolean;
+  hasIntervention: boolean;
+  summary: string;
+}
+
+/** Devolutiva da IA auxiliar (durante a escrita — sem nota ENEM). */
+export interface WritingAssistResult {
+  schema_version: '1.0';
+  structure: WritingAssistStructure;
+  tips: WritingAssistTip[];
+  encouragement: string;
+}
+
+export interface SaveDraftInput {
+  id?: string;
+  theme: string;
+  text: string;
+  linesUsed: number;
+  linesMax?: number;
+  minRecommended?: number;
+  savedRepertoireIds?: string[];
+}

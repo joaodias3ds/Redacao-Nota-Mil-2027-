@@ -11,19 +11,14 @@ coverage/
 *.tsbuildinfo
 .turbo/
 
+# === Pasta local de chaves / specs / export (NUNCA versionar) ===
+dados e chaves/
+
 # === Segredos e ambientes (NUNCA versionar) ===
 .env
 .env.*
 !.env.example
-!**/*.EXEMPLO.env
-!**/*.EXEMPLO.*
 !.env*.example
-
-dados e chaves/privados/**
-!dados e chaves/privados/.gitkeep
-!dados e chaves/privados/NAO-SUBIR.txt
-dados e chaves/05-deploy/**/*.env
-!dados e chaves/05-deploy/**/*.EXEMPLO.env
 
 **/credentials.json
 **/service-account*.json

@@ -1,3 +1,0 @@
-Arquivos reais (.env, JSON OAuth, service accounts) ficam NESTA pasta.
-Eles estão bloqueados pelo .gitignore da raiz.
-Se `git status` mostrar qualquer arquivo daqui, PARE o push.

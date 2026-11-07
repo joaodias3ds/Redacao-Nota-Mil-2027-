@@ -35,9 +35,14 @@ foreach ($f in $secretFiles) {
 Write-Host ''
 Write-Host '=== 2) git status (nao deve listar .env / privados) ==='
 $status = git status --porcelain 2>$null
-$bad = $status | Where-Object { $_ -match '\.env(\.|$)|credentials|privados[/\\]|service-account|client_secret|\.pem' }
+$bad = $status | Where-Object {
+  # remocoes de dados e chaves/ sao esperadas (pasta inteira ignorada)
+  if ($_ -match '^[D ]D\s+"?dados e chaves/') { return $false }
+  if ($_ -match '^D\s+dados e chaves/') { return $false }
+  $_ -match '\.env(\.|$)|credentials|privados[/\\]|service-account|client_secret|\.pem'
+}
 # allow .env.example
-$bad = $bad | Where-Object { $_ -notmatch '\.env\.example|\.EXEMPLO' }
+$bad = $bad | Where-Object { $_ -notmatch '\.env\.example|\.EXEMPLO|dados e chaves/' }
 if ($bad) {
   $failed = $true
   $bad | ForEach-Object { Write-Host "  RISCO staged/untracked: $_" }
@@ -54,8 +59,7 @@ $scanRoots = @(
   (Join-Path $root 'design-system'),
   (Join-Path $root 'referencia'),
   (Join-Path $root 'scripts'),
-  (Join-Path $root 'docs'),
-  (Join-Path $root 'dados e chaves')
+  (Join-Path $root 'docs')
 )
 $regex = 'AIza[0-9A-Za-z\-_]{20,}|sk-[A-Za-z0-9]{20,}|npg_[A-Za-z0-9]{10,}|eyJ[A-Za-z0-9_\-]{20,}\.[A-Za-z0-9_\-]{20,}|postgres(ql)?://[^:\s]+:[^@\s]+@'
 foreach ($sr in $scanRoots) {
