@@ -76,9 +76,19 @@ function StatusInner() {
       <p className="aluno-muted">
         A pré-correção é uma estimativa feita por IA. A nota oficial é a do seu professor.
       </p>
-      <Link className="aluno-btn" href={`/aluno/pre-correcao?essayId=${encodeURIComponent(essay.id)}`}>
-        Ver pré-correção
-      </Link>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <Link className="aluno-btn" href={`/aluno/pre-correcao?essayId=${encodeURIComponent(essay.id)}`}>
+          Ver pré-correção
+        </Link>
+        {essay.status === 'official' ? (
+          <Link
+            className="aluno-btn secondary"
+            href={`/aluno/oficial?essayId=${encodeURIComponent(essay.id)}`}
+          >
+            Ver nota oficial
+          </Link>
+        ) : null}
+      </div>
     </PhoneShell>
   );
 }

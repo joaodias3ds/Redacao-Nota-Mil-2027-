@@ -8,6 +8,7 @@ import type {
   EssayDraft,
   EssaySummary,
   EvolutionSnapshot,
+  OfficialGrade,
   PreCorrection,
   RepertoireCard,
   SaveDraftInput,
@@ -26,6 +27,7 @@ export interface StudentApi {
   getEssayStatus(essayId?: string): Promise<EssaySummary>;
   writingAssist(input: { theme: string; text: string }): Promise<WritingAssistResult>;
   getPreCorrection(essayId: string): Promise<PreCorrection>;
+  getOfficialGrade(essayId: string): Promise<OfficialGrade | null>;
   getEvolution(): Promise<EvolutionSnapshot>;
 }
 
@@ -187,6 +189,10 @@ export const mockStudentApi: StudentApi = {
     if (lastSend?.preCorrection) return { ...lastSend.preCorrection, essayId };
     return { ...mockPreCorrection, essayId };
   },
+  async getOfficialGrade() {
+    await delay();
+    return null;
+  },
   async getEvolution() {
     await delay();
     return mockEvolution;
@@ -251,6 +257,11 @@ export function createHttpStudentApi(baseUrl: string): StudentApi {
       return parseJson(
         await fetch(`${root}/api/aluno/pre-correcao?essayId=${encodeURIComponent(essayId)}`),
       );
+    },
+    async getOfficialGrade(essayId) {
+      const res = await fetch(`${root}/api/aluno/oficial?essayId=${encodeURIComponent(essayId)}`);
+      if (res.status === 404) return null;
+      return parseJson(res);
     },
     async getEvolution() {
       return parseJson(await fetch(`${root}/api/aluno/evolucao`));

@@ -157,3 +157,40 @@ export interface SendEssayResult {
   essay: EssaySummary;
   preCorrection: PreCorrection;
 }
+
+export interface TeacherQueueItem {
+  essayId: string;
+  studentName: string;
+  theme: string;
+  status: EssayStatus;
+  statusLabel: string;
+  estimatedTotal: number | null;
+  sentAtLabel: string;
+  updatedAtLabel: string;
+}
+
+export interface TeacherEssayDetail {
+  essayId: string;
+  studentName: string;
+  theme: string;
+  text: string;
+  status: EssayStatus;
+  statusLabel: string;
+  preCorrection: PreCorrection | null;
+  official: OfficialGrade | null;
+}
+
+export interface OfficialGrade {
+  essayId: string;
+  total: number;
+  maxTotal: number;
+  competencies: CompetencyScore[];
+  teacherNote: string;
+  publishedAtLabel: string;
+}
+
+export interface TeacherReviewInput {
+  action: 'publish' | 'return';
+  competencies: Array<{ id: CompetencyId; score: number }>;
+  teacherNote?: string;
+}

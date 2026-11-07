@@ -1,4 +1,11 @@
-import type { EssaySummary, PreCorrection, SendEssayInput, SendEssayResult } from '@nota-mil/shared/student';
+import type {
+  EssaySummary,
+  EssayStatus,
+  OfficialGrade,
+  PreCorrection,
+  SendEssayInput,
+  SendEssayResult,
+} from '@nota-mil/shared/student';
 import { getDraft, saveDraft, DEMO_DRAFT_ID } from './draft-store';
 import { runPreCorrection } from './pre-correction';
 import { loadLocalSecrets } from './load-local-env';
@@ -6,13 +13,14 @@ import { loadLocalSecrets } from './load-local-env';
 const DEMO_ESSAY_ID = '22222222-2222-4222-8222-222222222222';
 const DEMO_STUDENT_ID = '00000000-0000-4000-8000-000000000001';
 
-type Stored = {
+export type StoredEssay = {
   essay: EssaySummary;
   preCorrection: PreCorrection;
   text: string;
+  official?: OfficialGrade | null;
 };
 
-const memory = new Map<string, Stored>();
+const memory = new Map<string, StoredEssay>();
 
 function nowLabel() {
   return new Intl.DateTimeFormat('pt-BR', {
@@ -23,35 +31,73 @@ function nowLabel() {
   }).format(new Date());
 }
 
-function buildPipeline(aiReady: boolean): EssaySummary['pipeline'] {
+export function buildPipeline(
+  status: EssayStatus,
+  opts?: { sentLabel?: string; officialTotal?: number; teacherDetail?: string },
+): EssaySummary['pipeline'] {
+  const sent = opts?.sentLabel || nowLabel();
+  const aiDone = status !== 'draft' && status !== 'sent' && status !== 'ai_pregrading';
+  const teacherDone = status === 'official';
+  const returned = status === 'revision_requested';
+  const officialDone = status === 'official';
+
   return [
     {
       key: 'sent',
       label: 'Enviada',
-      detail: `${nowLabel()} · recebemos seu texto`,
-      done: true,
+      detail: `${sent} · recebemos seu texto`,
+      done: status !== 'draft',
+      current: status === 'draft' || status === 'sent',
     },
     {
       key: 'ai',
       label: 'Pré-correção da IA',
-      detail: aiReady ? 'Estimativa disponível' : 'Gerando estimativa…',
-      done: aiReady,
-      current: !aiReady,
+      detail: aiDone ? 'Estimativa disponível' : status === 'ai_pregrading' ? 'Gerando…' : '—',
+      done: aiDone,
+      current: status === 'ai_pregrading',
     },
     {
       key: 'teacher',
       label: 'Revisão do professor',
-      detail: 'Aguardando · prazo de até 3 dias',
-      done: false,
-      current: aiReady,
+      detail: teacherDone
+        ? 'Concluída'
+        : returned
+          ? opts?.teacherDetail || 'Devolvida para reescrita'
+          : aiDone
+            ? 'Aguardando · prazo de até 3 dias'
+            : '—',
+      done: teacherDone,
+      current: status === 'ai_ready' || status === 'teacher_review' || returned,
     },
     {
       key: 'official',
       label: 'Correção oficial',
-      detail: 'Você será avisado quando estiver pronta',
-      done: false,
+      detail: officialDone
+        ? `Publicada · ${opts?.officialTotal ?? '—'}/1000`
+        : returned
+          ? 'Aguardando nova versão'
+          : 'Você será avisado quando estiver pronta',
+      done: officialDone,
+      current: officialDone,
     },
   ];
+}
+
+function statusLabel(status: EssayStatus): string {
+  switch (status) {
+    case 'ai_ready':
+      return 'Pré-correção pronta';
+    case 'teacher_review':
+      return 'Em revisão';
+    case 'official':
+      return 'Nota oficial';
+    case 'revision_requested':
+      return 'Reescrita solicitada';
+    case 'ai_pregrading':
+      return 'Pré-correção';
+    default:
+      return status;
+  }
 }
 
 async function persistNeon(essayId: string, theme: string, text: string, linesUsed: number, pre: PreCorrection) {
@@ -110,22 +156,23 @@ export async function sendEssay(input: SendEssayInput): Promise<SendEssayResult>
   });
 
   const essayId = DEMO_ESSAY_ID;
+  const sentLabel = `Hoje, ${nowLabel()}`;
   const essay: EssaySummary = {
     id: essayId,
     theme: input.theme,
     status: 'ai_pregrading',
-    statusLabel: 'Pré-correção',
+    statusLabel: statusLabel('ai_pregrading'),
     version: 1,
-    sentAtLabel: `Hoje, ${nowLabel()}`,
-    pipeline: buildPipeline(false),
+    sentAtLabel: sentLabel,
+    pipeline: buildPipeline('ai_pregrading', { sentLabel }),
   };
 
   const preCorrection = await runPreCorrection(input.theme, input.text, essayId);
   essay.status = 'ai_ready';
-  essay.statusLabel = 'Pré-correção pronta';
-  essay.pipeline = buildPipeline(true);
+  essay.statusLabel = statusLabel('ai_ready');
+  essay.pipeline = buildPipeline('ai_ready', { sentLabel });
 
-  const stored: Stored = { essay, preCorrection, text: input.text };
+  const stored: StoredEssay = { essay, preCorrection, text: input.text, official: null };
   memory.set(essayId, stored);
   await persistNeon(essayId, input.theme, input.text, input.linesUsed, preCorrection);
   return { essay, preCorrection };
@@ -147,11 +194,10 @@ async function tryNeonStatus(id: string): Promise<EssaySummary | null> {
     if (!rows.length) return null;
     const row = rows[0] as {
       theme: string;
-      status: string;
+      status: EssayStatus;
       version: number;
       sent_at: string | null;
     };
-    const aiReady = row.status === 'ai_ready' || row.status === 'teacher_review' || row.status === 'official';
     const sentLabel = row.sent_at
       ? new Intl.DateTimeFormat('pt-BR', {
           hour: '2-digit',
@@ -160,14 +206,25 @@ async function tryNeonStatus(id: string): Promise<EssaySummary | null> {
           month: 'short',
         }).format(new Date(row.sent_at))
       : nowLabel();
+
+    let officialTotal: number | undefined;
+    if (row.status === 'official') {
+      const rev = await sql`
+        SELECT total FROM teacher_reviews
+        WHERE essay_id = ${id}::uuid AND action = 'publish'
+        ORDER BY created_at DESC LIMIT 1
+      `;
+      if (rev.length) officialTotal = (rev[0] as { total: number }).total;
+    }
+
     return {
       id,
       theme: row.theme,
-      status: (row.status as EssaySummary['status']) || 'ai_ready',
-      statusLabel: aiReady ? 'Pré-correção pronta' : 'Em processamento',
+      status: row.status,
+      statusLabel: statusLabel(row.status),
       version: row.version || 1,
       sentAtLabel: sentLabel,
-      pipeline: buildPipeline(aiReady),
+      pipeline: buildPipeline(row.status, { sentLabel, officialTotal }),
     };
   } catch {
     return null;
@@ -182,7 +239,6 @@ export async function getEssayStatus(essayId?: string): Promise<EssaySummary> {
   const fromDb = await tryNeonStatus(id);
   if (fromDb) return fromDb;
 
-  // fallback: se já existir draft, ainda não enviado
   const draft = await getDraft();
   return {
     id: DEMO_ESSAY_ID,
@@ -191,12 +247,7 @@ export async function getEssayStatus(essayId?: string): Promise<EssaySummary> {
     statusLabel: 'Rascunho',
     version: 1,
     sentAtLabel: 'Ainda não enviada',
-    pipeline: [
-      { key: 'sent', label: 'Enviada', detail: 'Aguardando envio', done: false, current: true },
-      { key: 'ai', label: 'Pré-correção da IA', detail: '—', done: false },
-      { key: 'teacher', label: 'Revisão do professor', detail: '—', done: false },
-      { key: 'official', label: 'Correção oficial', detail: '—', done: false },
-    ],
+    pipeline: buildPipeline('draft'),
   };
 }
 
@@ -220,14 +271,7 @@ export async function getPreCorrection(essayId?: string): Promise<PreCorrection>
       `;
       if (rows.length) {
         const raw = (rows[0] as { raw_response: PreCorrection }).raw_response;
-        if (raw?.competencies) {
-          memory.set(id, {
-            essay: await getEssayStatus(id),
-            preCorrection: raw,
-            text: '',
-          });
-          return raw;
-        }
+        if (raw?.competencies) return raw;
       }
     } catch {
       // ignore
@@ -236,6 +280,54 @@ export async function getPreCorrection(essayId?: string): Promise<PreCorrection>
 
   const draft = await getDraft();
   return runPreCorrection(draft.theme, draft.text, id);
+}
+
+export async function getOfficialGrade(essayId?: string): Promise<OfficialGrade | null> {
+  const id = essayId || DEMO_ESSAY_ID;
+  const hit = memory.get(id);
+  if (hit?.official) return hit.official;
+
+  loadLocalSecrets();
+  const url = process.env.DATABASE_URL;
+  if (!url) return null;
+  try {
+    const { neon } = await import('@neondatabase/serverless');
+    const sql = neon(url);
+    const rows = await sql`
+      SELECT competencies, total, teacher_note, created_at
+      FROM teacher_reviews
+      WHERE essay_id = ${id}::uuid AND action = 'publish'
+      ORDER BY created_at DESC
+      LIMIT 1
+    `;
+    if (!rows.length) return null;
+    const r = rows[0] as {
+      competencies: OfficialGrade['competencies'];
+      total: number;
+      teacher_note: string;
+      created_at: string;
+    };
+    return {
+      essayId: id,
+      total: r.total,
+      maxTotal: 1000,
+      competencies: r.competencies,
+      teacherNote: r.teacher_note,
+      publishedAtLabel: new Intl.DateTimeFormat('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        day: '2-digit',
+        month: 'short',
+      }).format(new Date(r.created_at)),
+    };
+  } catch {
+    return null;
+  }
+}
+
+/** Acesso interno para a fila do professor. */
+export function touchEssayMemory() {
+  return memory;
 }
 
 export { DEMO_ESSAY_ID };

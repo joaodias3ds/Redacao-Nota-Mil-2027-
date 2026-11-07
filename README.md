@@ -50,7 +50,9 @@ Componentes de referência: `EssayFeedback`, `GradeChart`, `BottomNav` em `desig
 
 ## Fase atual
 
-**Parte 1–2:** editor sincronizado + IA auxiliar; **envio** com pré-correção C1–C5 (nota estimada para treino). Ver `docs/PART1.md` e `docs/PART2.md`.
+**Parte 1–3:** editor + IA auxiliar; envio com pré-correção; **fila do professor** e nota oficial. Ver `docs/PART1.md`, `docs/PART2.md`, `docs/PART3.md`.
+
+Professor (demo): http://localhost:3001/professor/fila
 
 ## Segurança e chaves
 
