@@ -1,0 +1,25 @@
+<!-- @dsCard group="Components" viewport="700x780" name="Dados" subtitle="Cartões, listas, tabela, filtros e paginação" -->
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><title>Dados</title>
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>body{padding:24px;background:var(--bg-page)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.col{display:flex;flex-direction:column;gap:12px}.lbl{font:600 12px var(--font-body);color:var(--text-muted);margin-bottom:-4px}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}</style>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const NS = window.RedaONotaMilDesignSystem_cfb76c;
+const { Card, ListItem, DataTable, FilterChip, Pagination, Button, StatusBadge, Avatar } = NS;
+function App(){const [f,setF]=React.useState('todos');const [p,setP]=React.useState(2);
+const rows=[{id:1,nome:'Ana Beatriz Lima',turma:'Noite A',freq:'92%',media:'720',st:'success'},{id:2,nome:'João Pedro Alves',turma:'Noite A',freq:'78%',media:'640',st:'warning'},{id:3,nome:'Marina Souza',turma:'Manhã B',freq:'64%',media:'580',st:'danger'}];
+return (<div className="col" style={{gap:16}}>
+<div className="grid2"><Card title="Redação ENEM · Noite A" subtitle="Seg e qua · 19h00" eyebrow="TURMA" interactive footer={<Button size="sm" variant="ghost" iconRight="arrow-right">Abrir</Button>}><span style={{fontSize:14,color:'var(--text-secondary)'}}>28 alunos · Prof. Marina Rocha</span></Card>
+<Card title="Selecionado" subtitle="Cartão em estado selecionado" selected><span style={{fontSize:14,color:'var(--text-secondary)'}}>Borda e fundo rosa suave.</span></Card></div>
+<div className="row">{[['todos','Todos',null],['dia','Em dia',18],['atencao','Atenção',6],['atraso','Em atraso',4]].map(([id,l,n])=><FilterChip key={id} label={l} count={n} selected={f===id} onClick={()=>setF(id)}/>)}<FilterChip label="Turma: Noite A" removable/></div>
+<DataTable sortKey="nome" columns={[{key:'nome',label:'Aluno',sortable:true,render:r=><span style={{display:'flex',gap:10,alignItems:'center'}}><Avatar name={r.nome} size="sm"/>{r.nome}</span>},{key:'turma',label:'Turma'},{key:'freq',label:'Frequência',numeric:true},{key:'media',label:'Média',numeric:true,sortable:true},{key:'st',label:'Situação',render:r=><StatusBadge size="sm" tone={r.st} label={{success:'Regular',warning:'Atenção',danger:'Baixa frequência'}[r.st]}/>}]} rows={rows} selectedId={2} onRowClick={()=>{}}/>
+<Pagination page={p} totalPages={8} totalItems={156} pageSize={20} onChange={setP}/>
+<div style={{border:'1px solid var(--border-default)',borderRadius:12,overflow:'hidden'}}><ListItem leadingIcon="users" title="Turma Noite A" subtitle="28 alunos · Redação ENEM" meta="Hoje" chevron onClick={()=>{}}/><ListItem leading={<Avatar name="Carla Mendes"/>} title="Carla Mendes" subtitle="Responsável por 2 alunos" chevron selected onClick={()=>{}} divider={false}/></div>
+</div>);}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script></body></html>

@@ -1,0 +1,31 @@
+<!-- @dsCard group="Components" viewport="700x1500" name="Educação" subtitle="Turma, calendário, matrícula, chamada, devolutiva, notas, materiais, mensalidade, avisos e sincronização" -->
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><title>Educação</title>
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>body{padding:24px;background:var(--bg-page)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.col{display:flex;flex-direction:column;gap:12px}.lbl{font:600 12px var(--font-body);color:var(--text-muted);margin-bottom:-4px}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}</style>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const NS = window.RedaONotaMilDesignSystem_cfb76c;
+const { ClassCard, ScheduleCalendar, EnrollmentStepper, AttendanceRow, EssayFeedback, GradeChart, MaterialItem, PaymentStatus, AnnouncementCard, SyncIndicator, StatusBadge } = NS;
+function App(){const [a,setA]=React.useState({1:'present',2:'absent',3:'justified',4:'pending'});const [c,setC]=React.useState(false);
+const box={border:'1px solid var(--border-default)',borderRadius:12,overflow:'hidden',background:'var(--surface-card)'};
+return (<div className="col" style={{gap:16}}>
+<div className="grid2"><ClassCard course="Redação ENEM" className="Turma Noite A" teacher="Marina Rocha" studentsCount={28} tag={<StatusBadge size="sm" tone="brand" label="Hoje"/>} nextLesson={{weekday:'QUA',day:12,title:'Proposta de intervenção',time:'19h00–20h30',place:'Sala 2'}} onClick={()=>{}}/>
+<div className="col"><EnrollmentStepper steps={[{label:'Aluno'},{label:'Responsável'},{label:'Turma'},{label:'Revisão'}]} current={1} saveState="saved" lastSaved="14h32"/><EnrollmentStepper variant="compact" steps={[{label:'Aluno'},{label:'Dados do responsável'},{label:'Turma'},{label:'Revisão'}]} current={1} saveState="saving"/></div></div>
+<ScheduleCalendar title="Semana de 10 a 14" onPrev={()=>{}} onNext={()=>{}} todayId="qua" days={[{id:'seg',weekday:'SEG',day:10,events:[{start:'19h',end:'20h30',title:'Redação · Noite A',place:'Sala 2'}]},{id:'ter',weekday:'TER',day:11,events:[{start:'14h',end:'15h',title:'Reforço Matemática',place:'Sala 4'}]},{id:'qua',weekday:'QUA',day:12,events:[{start:'19h30',end:'21h',title:'Redação · Noite A',status:'changed'}]},{id:'qui',weekday:'QUI',day:13,events:[{start:'10h',end:'11h',title:'Gramática',status:'cancelled'}]},{id:'sex',weekday:'SEX',day:14,events:[]}]}/>
+<div style={box}>{[[1,'Ana Beatriz Lima'],[2,'João Pedro Alves'],[3,'Marina Souza'],[4,'Rafael Costa']].map(([id,n],i)=><AttendanceRow key={id} name={n} status={a[id]} detail={a[id]==='justified'?'Atestado enviado':null} onChange={v=>setA({...a,[id]:v})} divider={i<3}/>)}</div>
+<div className="grid2"><EssayFeedback theme="Tema de exemplo: o papel da leitura na formação do jovem" submittedAt="03/11" correctedBy="Prof. Marina" expandedId="C3" competencies={[{id:'C1',label:'Norma padrão da língua escrita',score:160},{id:'C2',label:'Compreensão da proposta',score:160},{id:'C3',label:'Seleção e organização de argumentos',score:120,comment:'Os argumentos são pertinentes, mas o segundo parágrafo precisa de um exemplo concreto.'},{id:'C4',label:'Mecanismos de coesão',score:160},{id:'C5',label:'Proposta de intervenção',score:80}]}/>
+<div className="col"><div style={{...box,padding:16}}><div style={{fontFamily:'var(--font-display)',fontWeight:600,marginBottom:28}}>Evolução das notas</div><GradeChart goal={800} goalLabel="Meta pessoal" data={[{label:'Jul',value:560},{label:'Ago',value:600},{label:'Set',value:640},{label:'Out',value:620},{label:'Nov',value:680}]}/></div>
+<div style={box}><MaterialItem type="pdf" title="Estrutura do texto dissertativo" meta="2,4 MB" status="new" offline/><MaterialItem type="activity" title="Lista de exercícios 4" due="Até sex, 23h59" status="pending"/><MaterialItem type="essay" title="Redação da semana 3" due="Venceu ontem" status="late" divider={false}/></div></div></div>
+<div className="grid2"><PaymentStatus reference="Novembro" student="Lucas Mendes" dueDate="10/11" amount="R$ 000,00" status="pending" onPay={()=>{}}/><PaymentStatus reference="Outubro" student="Lucas Mendes" paidAt="08/10" amount="R$ 000,00" status="paid" onReceipt={()=>{}}/></div>
+<div style={box}><PaymentStatus variant="row" reference="Setembro" amount="R$ 000,00" status="overdue" dueDate="10/09"/><PaymentStatus variant="row" reference="Agosto" amount="R$ 000,00" status="paid" paidAt="09/08"/></div>
+<div className="grid2"><AnnouncementCard author="Coordenação" role="Redação Nota Mil" audience="Turma Noite A" date="Hoje, 09h12" title="Simulado no sábado" body="O simulado começa às 8h. Traga documento com foto e caneta preta." requiresConfirmation confirmed={c} onConfirm={()=>setC(true)}/><AnnouncementCard read author="Marina Rocha" role="Professora" audience="Noite A" date="Ontem" title="Material da aula 12" body="O PDF com a proposta já está em Materiais." attachment="proposta-aula-12.pdf" confirmations={{done:21,total:28}}/></div>
+<div className="row"><SyncIndicator status="synced"/><SyncIndicator status="syncing"/><SyncIndicator status="pending" pendingCount={3}/><SyncIndicator status="offline"/><SyncIndicator status="error"/></div>
+<div style={box}><SyncIndicator variant="banner" status="offline" pendingCount={3}/></div>
+</div>);}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script></body></html>

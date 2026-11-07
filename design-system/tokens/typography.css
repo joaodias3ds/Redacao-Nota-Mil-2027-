@@ -1,0 +1,20 @@
+:root{
+--font-display:'Poppins',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+--font-body:'Inter',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+--font-mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+--weight-regular:400;--weight-medium:500;--weight-semibold:600;--weight-bold:700;
+/* Escala — mobile → desktop */
+--text-display-size:clamp(34px,5vw,56px);--text-display-lh:1.1;--text-display-ls:-0.02em;
+--text-h1-size:clamp(28px,3.4vw,40px);--text-h1-lh:1.15;--text-h1-ls:-0.015em;
+--text-h2-size:clamp(24px,2.6vw,32px);--text-h2-lh:1.2;--text-h2-ls:-0.01em;
+--text-h3-size:clamp(20px,2vw,24px);--text-h3-lh:1.3;
+--text-h4-size:18px;--text-h4-lh:1.35;
+--text-title-size:16px;--text-title-lh:1.4;
+--text-body-lg-size:18px;--text-body-lg-lh:1.6;
+--text-body-size:16px;--text-body-lh:1.5;
+--text-body-sm-size:14px;--text-body-sm-lh:1.5;
+--text-caption-size:13px;--text-caption-lh:1.4;
+--text-label-size:14px;--text-label-lh:1.3;
+--text-overline-size:12px;--text-overline-lh:1.3;--text-overline-ls:0.06em;
+--text-button-size:15px;--text-button-sm-size:14px;--text-button-lh:1;
+}

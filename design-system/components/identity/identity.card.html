@@ -1,0 +1,20 @@
+<!-- @dsCard group="Components" viewport="700x400" name="Identidade" subtitle="Avatar, seletor de perfil e seletor de aluno vinculado" -->
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><title>Identidade</title>
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>body{padding:24px;background:var(--bg-page)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.col{display:flex;flex-direction:column;gap:12px}.lbl{font:600 12px var(--font-body);color:var(--text-muted);margin-bottom:-4px}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}</style>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const NS = window.RedaONotaMilDesignSystem_cfb76c;
+const { Avatar, ProfileSwitcher, StudentSelector } = NS;
+function App(){const [p,setP]=React.useState('t');const [s,setS]=React.useState('1');return (<div className="col" style={{gap:20}}>
+<div className="row" style={{gap:16}}><Avatar name="Ana Lima" size="xs"/><Avatar name="Ana Lima" size="sm"/><Avatar name="Ana Lima" size="md" status="online"/><Avatar name="Bruno Castro" size="lg"/><Avatar name="Carla Mendes" size="xl" ring/></div>
+<StudentSelector students={[{id:'1',name:'Lucas Mendes',detail:'3º ano · Redação ENEM'},{id:'2',name:'Sofia Mendes',detail:'9º ano · Reforço Matemática'}]} value={s} onChange={setS}/>
+<div style={{width:280}}><ProfileSwitcher open user={{name:'Carla Mendes'}} profiles={[{id:'t',role:'teacher'},{id:'g',role:'guardian'},{id:'a',role:'admin'}]} value={p} onChange={setP}/></div>
+</div>);}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script></body></html>

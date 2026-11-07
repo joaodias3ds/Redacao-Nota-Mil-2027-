@@ -1,0 +1,28 @@
+<!-- @dsCard group="Components" viewport="700x820" name="Feedback" subtitle="Avisos, notificações, status, progresso, skeletons e estados de tela" -->
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><title>Feedback</title>
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>body{padding:24px;background:var(--bg-page)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.col{display:flex;flex-direction:column;gap:12px}.lbl{font:600 12px var(--font-body);color:var(--text-muted);margin-bottom:-4px}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}</style>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const NS = window.RedaONotaMilDesignSystem_cfb76c;
+const { Alert, Toast, StatusBadge, ProgressBar, Skeleton, StateView, Button } = NS;
+function App(){return (<div className="col" style={{gap:16}}>
+<div className="lbl">Cores semânticas — sempre com ícone e texto</div>
+<div className="row"><StatusBadge tone="success" label="Pago"/><StatusBadge tone="warning" label="A vencer"/><StatusBadge tone="danger" label="Em atraso"/><StatusBadge tone="info" label="Corrigida" icon="info"/><StatusBadge tone="neutral" label="Rascunho"/><StatusBadge tone="brand" label="Novo"/><StatusBadge tone="success" label="Online" dot size="sm"/></div>
+<div className="grid2"><Alert tone="info" title="Aula com novo horário">Quarta, 19h30 em vez de 19h.</Alert><Alert tone="success" title="Redação enviada">Você recebe a devolutiva em até 7 dias.</Alert><Alert tone="warning" title="Prazo amanhã" onClose={()=>{}}>A atividade 4 vence amanhã às 23h59.</Alert><Alert tone="danger" title="Falha no envio" action={<Button size="sm" variant="secondary" iconLeft="rotate-cw">Tentar de novo</Button>}>Verifique sua conexão.</Alert></div>
+<div className="row"><Toast tone="success" message="Chamada salva." actionLabel="Desfazer" onClose={()=>{}}/><Toast tone="danger" message="Não foi possível enviar."/></div>
+<div className="grid2"><ProgressBar label="Módulo: Argumentação" value={64}/><ProgressBar label="Frequência" value={78} tone="warning" valueLabel="78% · mínimo 75%"/></div>
+<div style={{display:'grid',gridTemplateColumns:'repeat(4,minmax(0,1fr))',gap:12}}>
+<div style={{border:'1px solid var(--border-default)',borderRadius:12,padding:16,display:'flex',flexDirection:'column',gap:12}}><div className="row" style={{gap:10}}><Skeleton circle height={40}/><Skeleton height={14} style={{flex:1}}/></div><Skeleton lines={3} height={10}/></div>
+<div style={{border:'1px solid var(--border-default)',borderRadius:12}}><StateView compact kind="empty" title="Nada pendente" message="Novas atividades aparecem aqui."/></div>
+<div style={{border:'1px solid var(--border-default)',borderRadius:12}}><StateView compact kind="error" title="Erro ao carregar" actionLabel="Tentar de novo"/></div>
+<div style={{border:'1px solid var(--border-default)',borderRadius:12}}><StateView compact kind="success" title="Matrícula concluída"/></div>
+</div>
+</div>);}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script></body></html>

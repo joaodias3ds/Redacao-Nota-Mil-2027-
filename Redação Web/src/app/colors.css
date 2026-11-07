@@ -1,0 +1,61 @@
+/* ===== Primitivos ===== */
+:root{
+--rnm-pink-50:#FFF0F8;--rnm-pink-100:#FFDDEF;--rnm-pink-200:#FFB8DE;--rnm-pink-300:#FF85C6;--rnm-pink-400:#F64BA8;
+--rnm-pink-500:#EC008B;/* rosa original da marca */
+--rnm-pink-600:#D1007B;/* rosa de ação — 5.25:1 com branco */
+--rnm-pink-700:#B8006A;--rnm-pink-800:#A3005E;--rnm-pink-900:#7A0046;
+--rnm-white:#FFFFFF;--rnm-gray-50:#F5F5F7;--rnm-gray-100:#ECECEE;--rnm-gray-200:#DCDCDF;--rnm-gray-300:#C4C5C8;--rnm-gray-400:#A7A8AB;--rnm-gray-500:#8E8F92;--rnm-gray-600:#6E6F72;
+--rnm-gray-700:#57585A;/* cinza da marca */
+--rnm-gray-800:#3A393B;--rnm-gray-900:#2A2829;
+--rnm-graphite:#211F20;/* grafite da marca */
+--rnm-graphite-deep:#18171A;
+--rnm-green-50:#EAF6EF;--rnm-green-200:#A8DCBF;--rnm-green-500:#2E9A63;--rnm-green-600:#1E7A4C;--rnm-green-700:#165E3A;
+--rnm-amber-50:#FFF5E1;--rnm-amber-200:#FFD98A;--rnm-amber-500:#E59A00;--rnm-amber-700:#8A5100;
+--rnm-red-50:#FDECEA;--rnm-red-200:#F6B7B2;--rnm-red-500:#E0443B;--rnm-red-600:#C2261E;--rnm-red-700:#9E1C15;
+--rnm-blue-50:#EAF2FB;--rnm-blue-200:#B4D2F1;--rnm-blue-500:#3A82CC;--rnm-blue-600:#1D63A8;--rnm-blue-700:#164E86;
+}
+/* ===== Semânticos — tema claro (padrão) ===== */
+:root{
+--brand:var(--rnm-pink-500);--brand-graphite:var(--rnm-graphite);--brand-gray:var(--rnm-gray-700);
+--bg-page:#FFFFFF;--bg-subtle:#F5F5F7;--bg-brand-soft:#FFF0F8;
+--surface-card:#FFFFFF;--surface-raised:#FFFFFF;--surface-sunken:#F5F5F7;--surface-inverse:#211F20;--surface-overlay:rgba(33,31,32,.48);
+--text-primary:#211F20;--text-secondary:#57585A;--text-muted:#6E6F72;--text-disabled:#A7A8AB;--text-inverse:#FFFFFF;--text-on-brand:#FFFFFF;--text-brand:#D1007B;--text-link:#D1007B;--text-link-hover:#A3005E;
+--border-subtle:#ECECEE;--border-default:#DCDCDF;--border-strong:#C4C5C8;--border-input:#8E8F92;--border-focus:#D1007B;--border-brand:#EC008B;
+--action-primary:#D1007B;--action-primary-hover:#B8006A;--action-primary-pressed:#A3005E;--action-primary-fg:#FFFFFF;
+--action-secondary:#FFFFFF;--action-secondary-hover:#F5F5F7;--action-secondary-pressed:#ECECEE;--action-secondary-fg:#211F20;--action-secondary-border:#C4C5C8;
+--action-ghost-hover:#FFF0F8;--action-ghost-pressed:#FFDDEF;--action-ghost-fg:#B8006A;
+--action-danger:#C2261E;--action-danger-hover:#9E1C15;--action-danger-pressed:#7E150F;--action-danger-fg:#FFFFFF;
+--action-disabled-bg:#ECECEE;--action-disabled-fg:#A7A8AB;
+--selected-bg:#FFF0F8;--selected-fg:#B8006A;--selected-indicator:#EC008B;
+--hover-overlay:rgba(33,31,32,.04);--pressed-overlay:rgba(33,31,32,.08);
+--focus-ring-color:#D1007B;--focus-ring:0 0 0 2px #FFFFFF,0 0 0 4px #D1007B;
+--success-fg:#165E3A;--success-solid:#1E7A4C;--success-bg:#EAF6EF;--success-border:#A8DCBF;
+--warning-fg:#8A5100;--warning-solid:#E59A00;--warning-bg:#FFF5E1;--warning-border:#FFD98A;
+--danger-fg:#9E1C15;--danger-solid:#C2261E;--danger-bg:#FDECEA;--danger-border:#F6B7B2;
+--info-fg:#164E86;--info-solid:#1D63A8;--info-bg:#EAF2FB;--info-border:#B4D2F1;
+--neutral-fg:#57585A;--neutral-solid:#8E8F92;--neutral-bg:#F5F5F7;--neutral-border:#DCDCDF;
+--skeleton-base:#ECECEE;--skeleton-shine:#F5F5F7;
+--logo-plate:#FFFFFF;
+}
+/* ===== Semânticos — tema escuro ===== */
+[data-theme="dark"]{
+--bg-page:#18171A;--bg-subtle:#211F20;--bg-brand-soft:rgba(236,0,139,.14);
+--surface-card:#211F20;--surface-raised:#2A2829;--surface-sunken:#18171A;--surface-inverse:#F5F5F7;--surface-overlay:rgba(0,0,0,.6);
+--text-primary:#F2F2F3;--text-secondary:#B9BABD;--text-muted:#A7A8AB;--text-disabled:#6E6F72;--text-inverse:#211F20;--text-on-brand:#FFFFFF;--text-brand:#FF6FBF;--text-link:#FF6FBF;--text-link-hover:#FFB8DE;
+--border-subtle:#2A2829;--border-default:#3A393B;--border-strong:#57585A;--border-input:#6E6F72;--border-focus:#FF6FBF;--border-brand:#EC008B;
+--action-primary:#D1007B;--action-primary-hover:#EC008B;--action-primary-pressed:#B8006A;--action-primary-fg:#FFFFFF;
+--action-secondary:#2A2829;--action-secondary-hover:#3A393B;--action-secondary-pressed:#57585A;--action-secondary-fg:#F2F2F3;--action-secondary-border:#57585A;
+--action-ghost-hover:rgba(236,0,139,.14);--action-ghost-pressed:rgba(236,0,139,.24);--action-ghost-fg:#FF6FBF;
+--action-danger:#E0443B;--action-danger-hover:#F06A62;--action-danger-pressed:#C2261E;--action-danger-fg:#18171A;
+--action-disabled-bg:#2A2829;--action-disabled-fg:#6E6F72;
+--selected-bg:rgba(236,0,139,.16);--selected-fg:#FF85C6;--selected-indicator:#F64BA8;
+--hover-overlay:rgba(255,255,255,.05);--pressed-overlay:rgba(255,255,255,.10);
+--focus-ring-color:#FF6FBF;--focus-ring:0 0 0 2px #18171A,0 0 0 4px #FF6FBF;
+--success-fg:#7FDDA9;--success-solid:#2E9A63;--success-bg:rgba(46,154,99,.16);--success-border:rgba(46,154,99,.4);
+--warning-fg:#FFC966;--warning-solid:#E59A00;--warning-bg:rgba(229,154,0,.16);--warning-border:rgba(229,154,0,.4);
+--danger-fg:#FF8F87;--danger-solid:#E0443B;--danger-bg:rgba(224,68,59,.16);--danger-border:rgba(224,68,59,.4);
+--info-fg:#8DC0F2;--info-solid:#3A82CC;--info-bg:rgba(58,130,204,.16);--info-border:rgba(58,130,204,.4);
+--neutral-fg:#B9BABD;--neutral-solid:#8E8F92;--neutral-bg:#2A2829;--neutral-border:#3A393B;
+--skeleton-base:#2A2829;--skeleton-shine:#3A393B;
+--logo-plate:#FFFFFF;
+}

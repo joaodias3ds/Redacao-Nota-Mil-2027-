@@ -1,0 +1,35 @@
+<!-- @dsCard group="Components" viewport="700x900" name="Formulários" subtitle="Texto, senha, busca, data, texto longo, seleção, checkbox, radio, switch e upload" -->
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><title>Formulários</title>
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<style>body{padding:24px;background:var(--bg-page)}.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.col{display:flex;flex-direction:column;gap:12px}.lbl{font:600 12px var(--font-body);color:var(--text-muted);margin-bottom:-4px}.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}</style>
+</head><body><div id="root"></div>
+<script type="text/babel">
+const NS = window.RedaONotaMilDesignSystem_cfb76c;
+const { TextField, TextArea, Select, Checkbox, Radio, Switch, FileUpload } = NS;
+function App(){const [t,setT]=React.useState('noite');const [c,setC]=React.useState(true);const [s,setS]=React.useState(true);const [q,setQ]=React.useState('Ana');
+return (<div className="col" style={{gap:20}}>
+<div className="grid2">
+<TextField label="Nome do aluno" placeholder="Nome completo" required helper="Como consta no documento."/>
+<TextField label="E-mail" type="email" defaultValue="responsavel@email" error="Informe um e-mail válido, como nome@email.com."/>
+<TextField label="Senha" type="password" defaultValue="segredo123" success="Senha forte."/>
+<TextField label="Buscar aluno" type="search" value={q} onChange={e=>setQ(e.target.value)} onClear={()=>setQ('')} placeholder="Nome ou matrícula"/>
+<TextField label="Data de nascimento" type="date" defaultValue="2008-05-14"/>
+<TextField label="Campo em foco" placeholder="Digitando…" state="focus"/>
+<Select label="Turma" placeholder="Selecione a turma" options={['Redação ENEM · Manhã','Redação ENEM · Noite','Reforço de Matemática']}/>
+<TextField label="Matrícula" defaultValue="RNM-0000" disabled helper="Gerada automaticamente."/>
+</div>
+<TextArea label="Comentário para o aluno" optional maxLength={300} defaultValue="Boa estrutura de argumentos. Revise a conclusão." helper="O aluno verá este texto na devolutiva."/>
+<div className="grid2">
+<div><Checkbox label="Li e concordo com o regulamento" checked={c} onChange={setC}/><Checkbox label="Receber avisos por e-mail" description="Resumo semanal da turma."/><Checkbox label="Selecionar todos" indeterminate/><Checkbox label="Campo obrigatório" error/></div>
+<div role="radiogroup"><Radio name="t" value="manha" label="Manhã" checked={t==='manha'} onChange={setT}/><Radio name="t" value="noite" label="Noite" checked={t==='noite'} onChange={setT}/><Radio name="t" value="sab" label="Sábado" disabled description="Sem vagas"/></div>
+</div>
+<div className="grid2"><div><Switch label="Avisos da turma" checked={s} onChange={setS}/><Switch label="Lembrete de aula" description="30 minutos antes"/><Switch label="Indisponível" disabled/></div>
+<FileUpload label="Foto da redação" files={[{name:'redacao-semana-3.jpg',status:'uploading',progress:62},{name:'rascunho.pdf',status:'error',message:'Arquivo acima de 10 MB.'}]} onRemove={()=>{}}/></div>
+</div>);}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script></body></html>

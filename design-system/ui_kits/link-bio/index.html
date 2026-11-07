@@ -1,0 +1,125 @@
+<!-- @dsCard group="UI Kit · Link na bio" viewport="440x940" name="Link na bio (Instagram)" subtitle="Página de links mobile — claro/escuro automático" -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Redação Nota Mil · Links</title>
+<meta name="description" content="Curso preparatório em Goiânia — Redação, Matemática, Exatas, Gramática, Biologia, Inglês e reforço individual.">
+<link rel="icon" href="../../assets/simbolo-r-livro.png">
+<link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="../site/image-slot.js"></script>
+<script>if(matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.dataset.theme='dark';</script>
+<style>
+body{background:var(--bg-subtle);min-height:100vh}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:440px;margin:0 auto;min-height:100vh;background:var(--bg-page);position:relative;padding:0 0 calc(32px + env(safe-area-inset-bottom))}
+.top{height:132px;background:var(--bg-brand-soft)}
+.share{position:absolute;top:16px;right:16px;width:44px;height:44px;border-radius:999px;border:0;background:var(--surface-card);color:var(--text-primary);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm);cursor:pointer}
+.share:active{transform:scale(.94)}
+.profile{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:0 24px;margin-top:-84px}
+.logo{background:#fff;border-radius:20px;padding:16px 20px;box-shadow:var(--shadow-md);display:flex}
+.logo img{height:96px;display:block}
+.name{font:600 22px/1.2 var(--font-display);color:var(--text-primary);margin-top:8px}
+.bio{font:400 15px/1.5 var(--font-body);color:var(--text-secondary);max-width:340px;text-wrap:pretty}
+.place{display:inline-flex;align-items:center;gap:6px;font:500 13px var(--font-body);color:var(--text-muted)}
+.social{display:flex;gap:8px;margin-top:4px}
+.social a{width:44px;height:44px;border-radius:999px;border:1px solid var(--border-default);display:flex;align-items:center;justify-content:center;color:var(--text-primary);transition:background var(--duration-fast),border-color var(--duration-fast)}
+.social a:hover{background:var(--bg-brand-soft);border-color:var(--border-brand);color:var(--text-brand)}
+.links{display:flex;flex-direction:column;gap:12px;padding:28px 20px 0}
+.cta{height:60px;border-radius:12px;background:var(--action-primary);color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;font:600 17px var(--font-body);transition:background var(--duration-fast),transform var(--duration-fast)}
+.cta:hover{background:var(--action-primary-hover);color:#fff}
+.cta:active{background:var(--action-primary-pressed);transform:scale(.98)}
+.link{display:flex;align-items:center;gap:14px;min-height:68px;padding:10px 14px 10px 10px;border-radius:12px;background:var(--surface-card);border:1px solid var(--border-default);transition:border-color var(--duration-fast),box-shadow var(--duration-fast),transform var(--duration-fast)}
+.link:hover{border-color:var(--border-strong);box-shadow:var(--shadow-sm);color:inherit}
+.link:active{transform:scale(.98)}
+.ic{width:48px;height:48px;border-radius:10px;background:var(--bg-brand-soft);color:var(--text-brand);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.lt b{font:600 16px/1.3 var(--font-body);color:var(--text-primary)}
+.lt span{font:400 13px/1.35 var(--font-body);color:var(--text-secondary)}
+.chev{color:var(--text-muted)}
+.feature{border-radius:16px;overflow:hidden;background:var(--surface-inverse);color:var(--text-inverse);display:flex;flex-direction:column}
+.feature .media{height:180px;position:relative;background:var(--bg-subtle);color:var(--text-muted)}
+.feature .body{padding:18px 18px 18px;display:flex;flex-direction:column;gap:6px}
+.pill{align-self:flex-start;height:26px;padding:0 10px;border-radius:999px;background:#EC008B;color:#fff;font:600 12px var(--font-body);display:inline-flex;align-items:center}
+[data-theme="dark"] .pill{background:#D1007B}
+.feature h2{font:600 19px/1.3 var(--font-display);color:inherit;margin:4px 0 0}
+.feature p{font:400 14px/1.5 var(--font-body);opacity:.8}
+.stores{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.store{height:48px;border-radius:10px;border:1px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;gap:8px;font:600 14px var(--font-body);color:inherit}
+[data-theme="dark"] .store{border-color:rgba(33,31,32,.2)}
+.store:hover{background:rgba(255,255,255,.08);color:inherit}
+.label{font:600 12px var(--font-body);color:var(--text-muted);letter-spacing:.04em;padding:12px 4px 0}
+.foot{display:flex;flex-direction:column;align-items:center;gap:8px;padding:36px 24px 0;font:400 12px var(--font-body);color:var(--text-muted)}
+.foot img{height:28px;opacity:.9}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#211F20;color:#F2F2F3;padding:12px 18px;border-radius:12px;font:500 14px var(--font-body);display:flex;align-items:center;gap:8px;box-shadow:var(--shadow-lg);transition:opacity var(--duration-base),transform var(--duration-base) var(--ease-standard)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+:focus-visible{outline:2px solid var(--focus-ring-color);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"></div>
+<button class="share" id="share" aria-label="Compartilhar página"><i data-lucide="share-2" style="width:20px;height:20px"></i></button>
+<header class="profile">
+<span class="logo"><img src="../../assets/logo-redacao-1000.png" alt="Redação 1000 — Curso Preparatório"></span>
+<h1 class="name">Redação Nota Mil</h1>
+<p class="bio">Redação e disciplinas complementares para ENEM, vestibulares e concursos. Reforço individual.</p>
+<span class="place"><i data-lucide="map-pin" style="width:14px;height:14px"></i>Goiânia · GO</span>
+<nav class="social" aria-label="Redes sociais">
+<a href="#" data-link="instagram" aria-label="Instagram"><i data-lucide="instagram" style="width:20px;height:20px"></i></a>
+<a href="#" data-link="whatsapp" aria-label="WhatsApp"><i data-lucide="message-circle" style="width:20px;height:20px"></i></a>
+<a href="#" data-link="youtube" aria-label="YouTube"><i data-lucide="youtube" style="width:20px;height:20px"></i></a>
+<a href="#" data-link="email" aria-label="E-mail"><i data-lucide="mail" style="width:20px;height:20px"></i></a>
+</nav>
+</header>
+<main class="links">
+<a class="cta" href="#" data-link="whatsapp"><i data-lucide="calendar-check" style="width:22px;height:22px"></i>Agendar aula experimental</a>
+<section class="feature" aria-label="Destaque">
+<div class="media"><image-slot id="bio-destaque" shape="rect" placeholder="Imagem do destaque (ex.: print do app)" style="width:100%;height:100%;display:block"></image-slot></div>
+<div class="body">
+<span class="pill">Novo</span>
+<h2>Conheça o app do aluno</h2>
+<p>Aulas, redações, devolutivas e avisos no celular — com acompanhamento para os responsáveis.</p>
+<div class="stores">
+<a class="store" href="#" data-link="appstore"><i data-lucide="apple" style="width:18px;height:18px"></i>App Store</a>
+<a class="store" href="#" data-link="googleplay"><i data-lucide="play" style="width:18px;height:18px"></i>Google Play</a>
+</div>
+</div>
+</section>
+<div class="label">CURSOS</div>
+<a class="link" href="#" data-link="site"><span class="ic"><i data-lucide="globe" style="width:22px;height:22px"></i></span><span class="lt"><b>Site oficial</b><span>Cursos, turmas e professores</span></span><i class="chev" data-lucide="chevron-right" style="width:20px;height:20px"></i></a>
+<a class="link" href="#" data-link="redacao"><span class="ic"><i data-lucide="pen-line" style="width:22px;height:22px"></i></span><span class="lt"><b>Redação ENEM, vestibulares e concursos</b><span>Produção semanal e devolutiva por competência</span></span><i class="chev" data-lucide="chevron-right" style="width:20px;height:20px"></i></a>
+<a class="link" href="#" data-link="disciplinas"><span class="ic"><i data-lucide="book-open-text" style="width:22px;height:22px"></i></span><span class="lt"><b>Disciplinas complementares</b><span>Matemática, Exatas, Gramática, Biologia e Inglês</span></span><i class="chev" data-lucide="chevron-right" style="width:20px;height:20px"></i></a>
+<a class="link" href="#" data-link="reforco"><span class="ic"><i data-lucide="user-round-check" style="width:22px;height:22px"></i></span><span class="lt"><b>Reforço individual</b><span>Aulas particulares no ritmo do aluno</span></span><i class="chev" data-lucide="chevron-right" style="width:20px;height:20px"></i></a>
+<div class="label">ACESSO</div>
+<a class="link" href="#" data-link="area"><span class="ic"><i data-lucide="log-in" style="width:22px;height:22px"></i></span><span class="lt"><b>Área do aluno e do responsável</b><span>Entrar no sistema</span></span><i class="chev" data-lucide="chevron-right" style="width:20px;height:20px"></i></a>
+<a class="link" href="#" data-link="mapa"><span class="ic"><i data-lucide="map-pin" style="width:22px;height:22px"></i></span><span class="lt"><b>Como chegar</b><span>Abrir no mapa</span></span><i class="chev" data-lucide="chevron-right" style="width:20px;height:20px"></i></a>
+</main>
+<footer class="foot">
+<img src="../../assets/simbolo-r-livro.png" alt="">
+<span>© Redação Nota Mil</span>
+</footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"><i data-lucide="circle-check" style="width:18px;height:18px;color:#7FDDA9"></i>Link copiado</div>
+<script>
+// Edite os links aqui
+const LINKS = {
+  instagram: 'https://instagram.com/',
+  whatsapp: 'https://wa.me/55620000000000?text=Ol%C3%A1!%20Quero%20agendar%20uma%20aula%20experimental.',
+  youtube: '#', email: 'mailto:contato@exemplo.com.br',
+  appstore: '#', googleplay: '#',
+  site: '../site/index.html', redacao: '../site/index.html', disciplinas: '../site/index.html', reforco: '../site/index.html',
+  area: '../site/index.html', mapa: 'https://maps.google.com/?q=Goi%C3%A2nia'
+};
+document.querySelectorAll('[data-link]').forEach(a => { const u = LINKS[a.dataset.link]; if (u) a.href = u; if (/^https?:/.test(a.href) && !a.href.startsWith(location.origin)) { a.target = '_blank'; a.rel = 'noopener'; } });
+lucide.createIcons();
+const toast = document.getElementById('toast');
+document.getElementById('share').addEventListener('click', async () => {
+  try { if (navigator.share) { await navigator.share({ title: 'Redação Nota Mil', url: location.href }); return; } await navigator.clipboard.writeText(location.href); } catch (e) {}
+  toast.classList.add('on'); setTimeout(() => toast.classList.remove('on'), 2200);
+});
+</script>
+</body>
+</html>

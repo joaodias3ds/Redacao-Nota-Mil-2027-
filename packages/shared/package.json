@@ -1,0 +1,28 @@
+{
+  "name": "@nota-mil/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js",
+      "import": "./dist/index.js"
+    },
+    "./student": {
+      "types": "./dist/student/index.d.ts",
+      "default": "./dist/student/index.js",
+      "import": "./dist/student/index.js"
+    },
+    "./src/*": "./src/*"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts src/student/index.ts --format esm --dts --clean",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": { "zod": "^4.0.0" },
+  "devDependencies": { "tsup": "^8.0.0", "typescript": "^5.9.0", "vitest": "^3.0.0" }
+}

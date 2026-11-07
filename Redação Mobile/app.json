@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "Redação Nota Mil",
+    "slug": "redacao-nota-mil",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "redacao",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "plugins": ["expo-router", "expo-secure-store"],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#EC008B"
+      }
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "br.com.redacaonotamil.app"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+/* ===== Tokens de componente ===== */
+:root{
+--button-height-sm:var(--control-h-sm);--button-height-md:var(--control-h-md);--button-height-lg:var(--control-h-lg);--button-radius:var(--radius-md);--button-padding-x-md:var(--space-4);--button-padding-x-lg:var(--space-6);--button-font-size:var(--text-button-size);
+--button-primary-bg:var(--action-primary);--button-primary-bg-hover:var(--action-primary-hover);--button-primary-bg-pressed:var(--action-primary-pressed);--button-primary-fg:var(--action-primary-fg);
+--input-height:var(--control-h-lg);--input-height-dense:var(--control-h-md);--input-radius:var(--radius-md);--input-padding-x:var(--space-3);--input-bg:var(--surface-card);--input-border:var(--border-input);--input-border-focus:var(--border-focus);--input-border-error:var(--danger-solid);--input-font-size:16px;
+--card-radius:var(--radius-lg);--card-padding:var(--space-4);--card-padding-lg:var(--space-6);--card-bg:var(--surface-card);--card-border:var(--border-default);--card-shadow-hover:var(--shadow-sm);
+--modal-radius:var(--radius-xl);--modal-padding:var(--space-6);--modal-shadow:var(--shadow-lg);
+--badge-height:26px;--badge-radius:var(--radius-full);--badge-padding-x:10px;
+--chip-height:36px;--chip-radius:var(--radius-full);
+--list-item-min-height:64px;--table-cell-padding-y:var(--space-3);--table-cell-padding-x:var(--space-4);
+--tab-height:48px;--tab-indicator:var(--selected-indicator);
+--nav-item-height:40px;--bottomnav-indicator-bg:var(--selected-bg);
+--attendance-button-size:48px;
+}
